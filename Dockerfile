@@ -7,7 +7,7 @@ WORKDIR /go/src/github.com/xxarupakaxx/linklist
 COPY go.mod go.sum ./
 RUN go mod download
 
-COPY . .
+COPY docker .
 RUN --mount=type=cache,target=/root/.cache/go-build \
   go build -o /linklist -ldflags "-s -w"
 
