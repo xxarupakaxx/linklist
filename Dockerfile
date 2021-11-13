@@ -1,7 +1,6 @@
 # backend
 FROM golang:1.17.3-alpine as builder
-RUN --mount=type=cache,target=/var/cache/apk \
- && apk add --update git
+RUN apk add --update git
 
 WORKDIR /go/src/github.com/xxarupakaxx/linklist
 COPY go.mod go.sum ./
