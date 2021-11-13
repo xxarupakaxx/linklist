@@ -1,0 +1,29 @@
+version: "3"
+
+services:
+  linklist:
+    build:
+      context: ../..
+      dockerfile: docker/test/Dockerfile
+    environment:
+      PORT: :1000
+      MARIADB_USERNAME: root
+      MARIADB_PASSWORD: password
+      MARIADB_HOSTNAME: mysql
+      MARIADB_DATABASE: linklist
+      TZ: Asia/Tokyo
+      GO111MODULE: "on"
+    ports:
+      - "1000:1000"
+    volumes:
+      - "../../:/go/src/github.com/xxarupakaxx/linklist"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mariadb:10.6.5
+    environment:
+      MYSQL_ROOT_PASSWARD: password
+      MYSQL_DATABSE: linklist
+    expose:
+      - "3306"
