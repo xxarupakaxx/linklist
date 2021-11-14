@@ -1,25 +1,21 @@
 package infra
 
 import (
-	"database/sql"
-	"log"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"github.com/sirupsen/logrus"
 	"os"
 )
 
-func DBConnect(db *sql.DB, err error) {
+func DBConnect(db *gorm.DB, err error) {
 	dbDriver := "mysql"
 	dbUser := os.Getenv("DB_USERNAME")
 	dbPass := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
 	dbHostname := os.Getenv("DB_HOSTNAME")
 	dbOption := "?parseTime=true&loc=Asia/Tokyo"
-	db, err = sql.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbHostname+":3306)/"+dbName+dbOption)
+	db, err = gorm.Open(dbDriver, dbUser+":"+dbPass+"@tcp("+dbHostname+":3306)/"+dbName+dbOption)
 	if err != nil {
-		log.Fatal(err)
-	}
-	if err = db.Ping(); err == nil {
-		log.Println("1success")
-	} else {
-		log.Println("failed connect err:%w", err)
+		logrus.Fatalf("failed in Connect DB:%w", err)
 	}
 }
