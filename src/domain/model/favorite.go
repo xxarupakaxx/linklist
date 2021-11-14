@@ -9,5 +9,5 @@ type Favorite struct {
 	CreatedAd time.Time `json:"created_ad"`
 	UpdatedAt time.Time `json:"updated_at"`
 
-	User User
+	User User `json:"user"`
 }

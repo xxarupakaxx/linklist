@@ -3,7 +3,7 @@ package model
 import "time"
 
 type Place struct {
-	ID        uint      `json:"id"`
+	ID        uint      `json:"id" gorm:"primary_key"`
 	Name      string    `json:"name"`
 	PlaceID   string    `json:"place_id"`
 	Address   string    `json:"address"`
@@ -12,5 +12,5 @@ type Place struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 
-	Favorite []Favorite
+	Favorite []Favorite `json:"favorite"`
 }
