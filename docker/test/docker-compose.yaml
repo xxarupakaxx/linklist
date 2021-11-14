@@ -7,10 +7,10 @@ services:
       dockerfile: docker/test/Dockerfile
     environment:
       PORT: :1000
-      MARIADB_USERNAME: root
-      MARIADB_PASSWORD: password
-      MARIADB_HOSTNAME: mysql
-      MARIADB_DATABASE: linklist
+      DB_USERNAME: root
+      DB_PASSWORD: password
+      DB_HOSTNAME: mysql
+      DB_DATABASE: linklist
       TZ: Asia/Tokyo
       GO111MODULE: "on"
     ports:
