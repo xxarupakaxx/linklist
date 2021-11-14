@@ -95,6 +95,27 @@ func (controller *APIController) AddFavorites() echo.HandlerFunc {
 	}
 }
 
+func (controller *APIController) RemoveFavorites() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		lineIDToken := c.FormValue("line_id_token")
+
+		lineUserID := getLineUserIDByToken(lineIDToken)
+		placeID := c.FormValue("place_id")
+
+		if lineUserID ==""||placeID ==""{
+			return c.JSON(http.StatusBadRequest,msgSetPram)
+		}
+
+		input := favoritedto.RemoveInput{
+			LineUserID: lineUserID,
+			PlaceID:    placeID,
+		}
+		output :=controller.favoriteInteractor.Remove(input)
+
+		return c.JSON(http.StatusOK,output)
+	}
+}
+
 type verifyResp struct {
 	Sub string `json:"sub"`
 }
