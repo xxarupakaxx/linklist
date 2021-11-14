@@ -2,6 +2,7 @@ package database
 
 import (
 	"context"
+	"errors"
 	"github.com/sirupsen/logrus"
 	"github.com/xxarupakaxx/linklist/src/domain/model"
 	"gorm.io/gorm"
@@ -34,7 +35,8 @@ func (fr *FavoriteRepository) FindAll(ctx context.Context, lineUserID string) []
 func (fr *FavoriteRepository) Save(ctx context.Context, id uint, placeID string) bool {
 	tx := fr.db.WithContext(ctx)
 	favorite := model.Favorite{}
-	if tx.Table("favorites").Where(model.Favorite{UserID: id, PlaceID: placeID}).First(&favorite).RowsAffected == 0 {
+	err := tx.Table("favorites").Where(model.Favorite{UserID: id, PlaceID: placeID}).First(&favorite).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		favorite = model.Favorite{UserID: id, PlaceID: placeID}
 		tx.Create(&favorite)
 		return true
@@ -45,7 +47,8 @@ func (fr *FavoriteRepository) Save(ctx context.Context, id uint, placeID string)
 func (fr *FavoriteRepository) Delete(ctx context.Context, id uint, placeID string) bool {
 	tx := fr.db.WithContext(ctx)
 	favorite := model.Favorite{}
-	if tx.Table("favorite").Where(model.Favorite{UserID: id, PlaceID: placeID}).First(&favorite).RowsAffected == 0 {
+	err := tx.Table("favorite").Where(model.Favorite{UserID: id, PlaceID: placeID}).First(&favorite).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return false
 	}
 	tx.Delete(&favorite)
