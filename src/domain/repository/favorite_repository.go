@@ -1,7 +1,9 @@
 package repository
 
+import "context"
+
 type IFavoriteRepository interface {
-	FindAll(placeID string) []string
-	Save(id uint, placeID string) bool
-	Delete(id uint, placeID string) bool
+	FindAll(ctx context.Context, lineUserID string) []string
+	Save(ctx context.Context, id uint, placeID string) bool
+	Delete(ctx context.Context, id uint, placeID string) bool
 }

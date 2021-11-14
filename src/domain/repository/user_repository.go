@@ -1,6 +1,8 @@
 package repository
 
+import "context"
+
 type IUserRepository interface {
-	Save(lineUserID string) uint
-	FindOne(lineUserID string) uint
+	Save(ctx context.Context, lineUserID string) uint
+	FindOne(ctx context.Context, lineUserID string) uint
 }
