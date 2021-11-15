@@ -77,8 +77,8 @@ func (l *LinePresenter) GetFavorites(output favoritedto.GetOutput) {
 	msgs :=carouselMsgs{
 		noResult:            msgNoRegistGetFavorites,
 		altText:             msgAltTextGetFavorites,
-		postbackActionLabel: msgPostbackActionLabelSearch,
-		postbackActionData:  msgPostbackActionDataSearch,
+		postbackActionLabel: msgPostbackActionLabelGetFavorites,
+		postbackActionData:  msgPostbackActionDataGetFavorites,
 	}
 	l.replyCarouselColumn(msgs,output.GoogleMapOutputs,output.ReplyToken)
 }
