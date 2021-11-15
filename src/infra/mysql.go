@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func DBConnect(db *gorm.DB, err error) {
+func DBConnect()(db *gorm.DB, err error) {
 	dbUser := os.Getenv("DB_USERNAME")
 	dbPass := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
@@ -18,4 +18,5 @@ func DBConnect(db *gorm.DB, err error) {
 	if err != nil {
 		logrus.Fatalf("failed in Connect DB:%w", err)
 	}
+	return db,nil
 }
