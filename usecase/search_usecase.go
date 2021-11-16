@@ -12,12 +12,12 @@ type ISearchUseCase interface {
 	Hundle(input input.Search) output.Search
 }
 
-type SearchInteract struct {
+type SearchInteractor struct {
 	googleMapGateway IGoogleMapGateway
 	linePresenter    ILinePresenter
 }
 
-func (si *SearchInteract) Hundle(input input.Search) output.Search {
+func (si *SearchInteractor) Hundle(input input.Search) output.Search {
 	outQ := ""
 	var googleMapOutputs []model.Place
 	if isNomination(input.Q, input.Lat, input.Lng) {
@@ -43,8 +43,8 @@ func (si *SearchInteract) Hundle(input input.Search) output.Search {
 	return output
 }
 
-func NewSearchInteract(googleMapGateway IGoogleMapGateway, linePresenter ILinePresenter) *SearchInteract {
-	return &SearchInteract{googleMapGateway: googleMapGateway, linePresenter: linePresenter}
+func NewSearchInteract(googleMapGateway IGoogleMapGateway, linePresenter ILinePresenter) *SearchInteractor {
+	return &SearchInteractor{googleMapGateway: googleMapGateway, linePresenter: linePresenter}
 }
 
 func isNomination(q string, lat float64, lng float64) bool {

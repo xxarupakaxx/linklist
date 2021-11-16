@@ -13,7 +13,7 @@ type IFavoriteUseCase interface {
 	Remove(input input.Remove) output.Remove
 }
 
-type FavoriteInteracter struct {
+type FavoriteInteractor struct {
 	userRepository     repository.IUserRepository
 	favoriteRepository repository.IFavoriteRepository
 	googleMapGateway   IGoogleMapGateway
@@ -21,7 +21,7 @@ type FavoriteInteracter struct {
 	context            context.Context
 }
 
-func (interact *FavoriteInteracter) Get(input input.Get) output.Get {
+func (interact *FavoriteInteractor) Get(input input.Get) output.Get {
 	placeIDs := interact.favoriteRepository.FindAll(interact.context, input.LineUserID)
 	googleMapOutputs := interact.googleMapGateway.GetPlaceDetailsAndPhotoURLs(placeIDs, true)
 
@@ -36,7 +36,7 @@ func (interact *FavoriteInteracter) Get(input input.Get) output.Get {
 	return output
 }
 
-func (interact *FavoriteInteracter) Add(input input.Add) output.Add {
+func (interact *FavoriteInteractor) Add(input input.Add) output.Add {
 	userID := interact.userRepository.Save(interact.context, input.LineUserID)
 	var userExists bool
 	var isAdded bool
@@ -61,7 +61,7 @@ func (interact *FavoriteInteracter) Add(input input.Add) output.Add {
 	return output
 }
 
-func (interact *FavoriteInteracter) Remove(input input.Remove) output.Remove {
+func (interact *FavoriteInteractor) Remove(input input.Remove) output.Remove {
 	userID := interact.userRepository.FindOne(interact.context, input.LineUserID)
 
 	var userExists bool
@@ -86,8 +86,8 @@ func (interact *FavoriteInteracter) Remove(input input.Remove) output.Remove {
 	return output
 }
 
-func NewFavoriteInteract(userRepository repository.IUserRepository, favoriteRepository repository.IFavoriteRepository, googleMapGateway IGoogleMapGateway, linePresenter ILinePresenter) *FavoriteInteracter {
-	return &FavoriteInteracter{
+func NewFavoriteInteract(userRepository repository.IUserRepository, favoriteRepository repository.IFavoriteRepository, googleMapGateway IGoogleMapGateway, linePresenter ILinePresenter) *FavoriteInteractor {
+	return &FavoriteInteractor{
 		userRepository:     userRepository,
 		favoriteRepository: favoriteRepository,
 		googleMapGateway:   googleMapGateway,
