@@ -32,15 +32,15 @@ func (si *SearchInteractor) Hundle(input input.Search) output.Search {
 		logrus.Error("Error　unexpected user request")
 	}
 
-	output := output.Search{
+	search := output.Search{
 		ReplyToken:       input.ReplyToken,
 		Q:                outQ,
 		GoogleMapOutputs: googleMapOutputs,
 	}
-	if output.ReplyToken != "" {
-		si.linePresenter.Search(output)
+	if search.ReplyToken != "" {
+		si.linePresenter.Search(search)
 	}
-	return output
+	return search
 }
 
 func NewSearchInteract(googleMapGateway IGoogleMapGateway, linePresenter ILinePresenter) *SearchInteractor {
