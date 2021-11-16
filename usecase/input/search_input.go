@@ -1,6 +1,6 @@
-package searchdto
+package input
 
-type Input struct {
+type Search struct {
 	ReplyToken string  `json:"reply_token"`
 	Q          string  `json:"q"`
 	Addr       string  `json:"addr"`

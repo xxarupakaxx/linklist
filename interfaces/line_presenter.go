@@ -1,12 +1,11 @@
-package presenter
+package interfaces
 
 import (
 	"fmt"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/sirupsen/logrus"
 	"github.com/xxarupakaxx/linklist/domain/model"
-	"github.com/xxarupakaxx/linklist/usecase/dto/favoritedto"
-	"github.com/xxarupakaxx/linklist/usecase/dto/searchdto"
+	"github.com/xxarupakaxx/linklist/usecase/output"
 	"os"
 	"unicode/utf8"
 )
@@ -61,7 +60,7 @@ func NewLinePresenter() *LinePresenter {
 	return &LinePresenter{bot: bot}
 }
 
-func (l *LinePresenter) addFavorite(output favoritedto.AddOutput) {
+func (l *LinePresenter) addFavorite(output output.Add) {
 	replyToken := output.ReplyToken
 
 	if !output.UserExists {
@@ -73,7 +72,7 @@ func (l *LinePresenter) addFavorite(output favoritedto.AddOutput) {
 	}
 }
 
-func (l *LinePresenter) GetFavorites(output favoritedto.GetOutput) {
+func (l *LinePresenter) GetFavorites(output output.Get) {
 	msgs := carouselMsgs{
 		noResult:            msgNoRegistGetFavorites,
 		altText:             msgAltTextGetFavorites,
@@ -83,7 +82,7 @@ func (l *LinePresenter) GetFavorites(output favoritedto.GetOutput) {
 	l.replyCarouselColumn(msgs,output.GoogleMapOutputs,output.ReplyToken)
 }
 
-func (l *LinePresenter) RemoveFavorite(output favoritedto.RemoveOutput) {
+func (l *LinePresenter) RemoveFavorite(output output.Remove) {
 	if !output.UserExists {
 		l.replyMessage(output.ReplyToken, msgFailRemoveFavorite)
 	}else if output.IsAlreadyRemoved {
@@ -93,7 +92,7 @@ func (l *LinePresenter) RemoveFavorite(output favoritedto.RemoveOutput) {
 	}
 }
 
-func (l *LinePresenter) Search(output searchdto.Output) {
+func (l *LinePresenter) Search(output output.Search) {
 	msgs := carouselMsgs{
 		noResult:            msgNoRegisterSearch,
 		altText:             fmt.Sprintf(msgAltTextSearch, output.Q),

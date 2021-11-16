@@ -1,4 +1,4 @@
-package gateway
+package interfaces
 
 import (
 	"context"

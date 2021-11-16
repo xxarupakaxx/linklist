@@ -5,9 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/sirupsen/logrus"
-	"github.com/xxarupakaxx/linklist/usecase/dto/favoritedto"
-	"github.com/xxarupakaxx/linklist/usecase/dto/searchdto"
-	"github.com/xxarupakaxx/linklist/usecase/interactor/usecase"
+	usecase2 "github.com/xxarupakaxx/linklist/usecase"
+	input2 "github.com/xxarupakaxx/linklist/usecase/input"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -19,12 +18,12 @@ import (
 const msgSetPram = "パラメータを設定指定ください"
 
 type APIController struct {
-	favoriteInteractor usecase.IFavoriteUseCase
-	searchInteractor   usecase.ISearchUseCase
+	favoriteInteractor usecase2.IFavoriteUseCase
+	searchInteractor   usecase2.ISearchUseCase
 	bot                *linebot.Client
 }
 
-func NewAPIController(favoriteInteractor usecase.IFavoriteUseCase, searchInteractor usecase.ISearchUseCase) *APIController {
+func NewAPIController(favoriteInteractor usecase2.IFavoriteUseCase, searchInteractor usecase2.ISearchUseCase) *APIController {
 	return &APIController{favoriteInteractor: favoriteInteractor, searchInteractor: searchInteractor}
 }
 
@@ -49,7 +48,7 @@ func (controller *APIController) Search() echo.HandlerFunc {
 			}
 		}
 
-		input := searchdto.Input{
+		input := input2.Search{
 			Q:    q,
 			Addr: addr,
 			Lat:  lat,
@@ -69,7 +68,7 @@ func (controller *APIController) GetFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := favoritedto.GetInput{LineUserID: lineUserID}
+		input := input2.Get{LineUserID: lineUserID}
 		output := controller.favoriteInteractor.Get(input)
 		return c.JSON(http.StatusOK, output)
 	}
@@ -85,7 +84,7 @@ func (controller *APIController) AddFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := favoritedto.AddInput{
+		input := input2.Add{
 			LineUserID: lineUseID,
 			PlaceID:    placeID,
 		}
@@ -106,7 +105,7 @@ func (controller *APIController) RemoveFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := favoritedto.RemoveInput{
+		input := input2.Remove{
 			LineUserID: lineUserID,
 			PlaceID:    placeID,
 		}

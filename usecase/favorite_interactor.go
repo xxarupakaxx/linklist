@@ -1,26 +1,25 @@
-package interactor
+package usecase
 
 import (
 	"context"
-	 "github.com/xxarupakaxx/linklist/domain/repository"
-	 "github.com/xxarupakaxx/linklist/usecase/dto/favoritedto"
-	 "github.com/xxarupakaxx/linklist/usecase/gateway"
-	 "github.com/xxarupakaxx/linklist/usecase/presenter"
+	"github.com/xxarupakaxx/linklist/domain/repository"
+	"github.com/xxarupakaxx/linklist/usecase/input"
+	"github.com/xxarupakaxx/linklist/usecase/output"
 )
 
 type FavoriteInteract struct {
 	userRepository     repository.IUserRepository
 	favoriteRepository repository.IFavoriteRepository
-	googleMapGateway   gateway.IGoogleMapGateway
-	linePresenter      presenter.ILinePresenter
+	googleMapGateway   IGoogleMapGateway
+	linePresenter      ILinePresenter
 	context            context.Context
 }
 
-func (interact *FavoriteInteract) Get(input favoritedto.GetInput) favoritedto.GetOutput {
+func (interact *FavoriteInteract) Get(input input.Get) output.Get {
 	placeIDs := interact.favoriteRepository.FindAll(interact.context, input.LineUserID)
 	googleMapOutputs := interact.googleMapGateway.GetPlaceDetailsAndPhotoURLs(placeIDs, true)
 
-	output := favoritedto.GetOutput{
+	output := output.Get{
 		ReplyToken:       input.ReplyToken,
 		GoogleMapOutputs: googleMapOutputs,
 	}
@@ -31,7 +30,7 @@ func (interact *FavoriteInteract) Get(input favoritedto.GetInput) favoritedto.Ge
 	return output
 }
 
-func (interact *FavoriteInteract) Add(input favoritedto.AddInput) favoritedto.AddOutput {
+func (interact *FavoriteInteract) Add(input input.Add) output.Add {
 	userID := interact.userRepository.Save(interact.context, input.LineUserID)
 	var userExists bool
 	var isAdded bool
@@ -43,7 +42,7 @@ func (interact *FavoriteInteract) Add(input favoritedto.AddInput) favoritedto.Ad
 		isAdded = interact.favoriteRepository.Save(interact.context, userID, input.PlaceID)
 	}
 
-	output := favoritedto.AddOutput{
+	output := output.Add{
 		ReplyToken:     input.ReplyToken,
 		UserExists:     userExists,
 		IsAlreadyAdded: !isAdded,
@@ -56,7 +55,7 @@ func (interact *FavoriteInteract) Add(input favoritedto.AddInput) favoritedto.Ad
 	return output
 }
 
-func (interact *FavoriteInteract) Remove(input favoritedto.RemoveInput) favoritedto.RemoveOutput {
+func (interact *FavoriteInteract) Remove(input input.Remove) output.Remove {
 	userID := interact.userRepository.FindOne(interact.context, input.LineUserID)
 
 	var userExists bool
@@ -69,7 +68,7 @@ func (interact *FavoriteInteract) Remove(input favoritedto.RemoveInput) favorite
 		isRemoved = interact.favoriteRepository.Delete(interact.context, userID, input.PlaceID)
 	}
 
-	output := favoritedto.RemoveOutput{
+	output := output.Remove{
 		ReplyToken:       input.ReplyToken,
 		UserExists:       userExists,
 		IsAlreadyRemoved: !isRemoved,
@@ -81,7 +80,7 @@ func (interact *FavoriteInteract) Remove(input favoritedto.RemoveInput) favorite
 	return output
 }
 
-func NewFavoriteInteract(userRepository repository.IUserRepository, favoriteRepository repository.IFavoriteRepository, googleMapGateway gateway.IGoogleMapGateway, linePresenter presenter.ILinePresenter) *FavoriteInteract {
+func NewFavoriteInteract(userRepository repository.IUserRepository, favoriteRepository repository.IFavoriteRepository, googleMapGateway IGoogleMapGateway, linePresenter ILinePresenter) *FavoriteInteract {
 	return &FavoriteInteract{
 		userRepository:     userRepository,
 		favoriteRepository: favoriteRepository,

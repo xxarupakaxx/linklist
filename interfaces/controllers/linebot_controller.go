@@ -4,22 +4,20 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/sirupsen/logrus"
-	 "github.com/xxarupakaxx/linklist/usecase/dto/favoritedto"
- "github.com/xxarupakaxx/linklist/usecase/dto/searchdto"
-	 "github.com/xxarupakaxx/linklist/usecase/interactor"
-	"github.com/xxarupakaxx/linklist/usecase/interactor/usecase"
+	usecase2 "github.com/xxarupakaxx/linklist/usecase"
+	"github.com/xxarupakaxx/linklist/usecase/input"
 	"net/http"
 	"os"
 	"strings"
 )
 
 type LinebotController struct {
-	favoriteInteractor usecase.IFavoriteUseCase
-	searchInteractor   interactor.SearchInteract
+	favoriteInteractor usecase2.IFavoriteUseCase
+	searchInteractor   usecase2.SearchInteract
 	bot                *linebot.Client
 }
 
-func NewLinebotController(favoriteInteractor usecase.IFavoriteUseCase, searchInteractor interactor.SearchInteract, bot *linebot.Client) *LinebotController {
+func NewLinebotController(favoriteInteractor usecase2.IFavoriteUseCase, searchInteractor usecase2.SearchInteract, bot *linebot.Client) *LinebotController {
 	secret := os.Getenv("LINEBOT_SECRET")
 	token := os.Getenv("LINEBOT_TOKEN")
 
@@ -56,13 +54,13 @@ func (controller *LinebotController) replyToTextMessage(e *linebot.Event) {
 	msg := e.Message.(*linebot.TextMessage).Text
 
 	if msg == "お気に入り" {
-		favoriteGetInput := favoritedto.GetInput{
+		favoriteGetInput := input.Get{
 			ReplyToken: e.ReplyToken,
 			LineUserID: e.Source.UserID,
 		}
 		controller.favoriteInteractor.Get(favoriteGetInput)
 	}else{
-		searchInput := searchdto.Input{
+		searchInput := input.Search{
 			ReplyToken: e.ReplyToken,
 			Q:          msg,
 		}
@@ -73,7 +71,7 @@ func (controller *LinebotController) replyToTextMessage(e *linebot.Event) {
 func (controller *LinebotController) replyToLocationMessage(e *linebot.Event) {
 	msg := e.Message.(*linebot.LocationMessage)
 
-	searchInput := searchdto.Input{
+	searchInput := input.Search{
 		ReplyToken: e.ReplyToken,
 		Q:          msg.Title,
 		Addr:       excerptAddr(msg.Address),
@@ -86,14 +84,14 @@ func (controller *LinebotController) replyToLocationMessage(e *linebot.Event) {
 func (controller *LinebotController) replyToEventTypePostBack(e *linebot.Event)  {
 	dataMap := createDataMap(e.Postback.Data)
 	if dataMap["action"]== "addFavorite" {
-		favoriteAddInput := favoritedto.AddInput{
+		favoriteAddInput := input.Add{
 			ReplyToken: e.ReplyToken,
 			LineUserID: e.Source.UserID,
 			PlaceID:    dataMap["placeId"],
 		}
 		controller.favoriteInteractor.Add(favoriteAddInput)
 	}else if dataMap["action"] == "removeFavorite" {
-		favoriteRemoveInput := favoritedto.RemoveInput{
+		favoriteRemoveInput := input.Remove{
 			ReplyToken: e.ReplyToken,
 			LineUserID: e.Source.UserID,
 			PlaceID:    dataMap["placeId"],

@@ -1,20 +1,19 @@
-package interactor
+package usecase
 
 import (
 	"github.com/sirupsen/logrus"
-	 "github.com/xxarupakaxx/linklist/domain/model"
-	 "github.com/xxarupakaxx/linklist/usecase/dto/searchdto"
-	"github.com/xxarupakaxx/linklist/usecase/gateway"
-	"github.com/xxarupakaxx/linklist/usecase/presenter"
+	"github.com/xxarupakaxx/linklist/domain/model"
+	"github.com/xxarupakaxx/linklist/usecase/input"
+	"github.com/xxarupakaxx/linklist/usecase/output"
 	"os"
 )
 
 type SearchInteract struct {
-	googleMapGateway gateway.IGoogleMapGateway
-	linePresenter    presenter.ILinePresenter
+	googleMapGateway IGoogleMapGateway
+	linePresenter    ILinePresenter
 }
 
-func (si *SearchInteract) Hundle(input searchdto.Input) searchdto.Output {
+func (si *SearchInteract) Hundle(input input.Search) output.Search {
 	outQ := ""
 	var googleMapOutputs []model.Place
 	if isNomination(input.Q, input.Lat, input.Lng) {
@@ -29,7 +28,7 @@ func (si *SearchInteract) Hundle(input searchdto.Input) searchdto.Output {
 		logrus.Error("Error　unexpected user request")
 	}
 
-	output := searchdto.Output{
+	output := output.Search{
 		ReplyToken:       input.ReplyToken,
 		Q:                outQ,
 		GoogleMapOutputs: googleMapOutputs,
@@ -40,7 +39,7 @@ func (si *SearchInteract) Hundle(input searchdto.Input) searchdto.Output {
 	return output
 }
 
-func NewSearchInteract(googleMapGateway gateway.IGoogleMapGateway, linePresenter presenter.ILinePresenter) *SearchInteract {
+func NewSearchInteract(googleMapGateway IGoogleMapGateway, linePresenter ILinePresenter) *SearchInteract {
 	return &SearchInteract{googleMapGateway: googleMapGateway, linePresenter: linePresenter}
 }
 

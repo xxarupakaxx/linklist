@@ -1,4 +1,4 @@
-package gateway
+package usecase
 
 import (
 	 "github.com/xxarupakaxx/linklist/domain/model"
