@@ -48,13 +48,13 @@ func (controller *APIController) Search() echo.HandlerFunc {
 			}
 		}
 
-		input := input.Search{
+		search := input.Search{
 			Q:    q,
 			Addr: addr,
 			Lat:  lat,
 			Lng:  lng,
 		}
-		output := controller.searchInteractor.Hundle(input)
+		output := controller.searchInteractor.Hundle(search)
 
 		return c.JSON(http.StatusOK, output)
 	}
@@ -68,8 +68,8 @@ func (controller *APIController) GetFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := input.Get{LineUserID: lineUserID}
-		output := controller.favoriteInteractor.Get(input)
+		get := input.Get{LineUserID: lineUserID}
+		output := controller.favoriteInteractor.Get(get)
 		return c.JSON(http.StatusOK, output)
 	}
 }
@@ -84,11 +84,11 @@ func (controller *APIController) AddFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := input.Add{
+		add := input.Add{
 			LineUserID: lineUseID,
 			PlaceID:    placeID,
 		}
-		output :=controller.favoriteInteractor.Add(input)
+		output :=controller.favoriteInteractor.Add(add)
 
 		return c.JSON(http.StatusOK,output)
 	}
@@ -105,11 +105,11 @@ func (controller *APIController) RemoveFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := input.Remove{
+		remove := input.Remove{
 			LineUserID: lineUserID,
 			PlaceID:    placeID,
 		}
-		output :=controller.favoriteInteractor.Remove(input)
+		output :=controller.favoriteInteractor.Remove(remove)
 
 		return c.JSON(http.StatusOK,output)
 	}

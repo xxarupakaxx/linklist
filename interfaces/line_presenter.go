@@ -116,14 +116,14 @@ func (l *LinePresenter) replyCarouselColumn(msg carouselMsgs, googleMapOutputs [
 	}
 
 	ccs :=[]*linebot.CarouselColumn{}
-	for _, output := range googleMapOutputs {
-		addr := output.Address
+	for _, googleMapOutput := range googleMapOutputs {
+		addr := googleMapOutput.Address
 		if maxTextWC < utf8.RuneCountInString(addr){
 			addr = string([]rune(addr)[:maxTextWC])
 		}
 
-		data := fmt.Sprintf(msg.postbackActionData,output.PlaceID)
-		cc := linebot.NewCarouselColumn(output.PhotoURL,output.Name,addr,linebot.NewURIAction("Open Google Map",output.URL),linebot.NewPostbackAction(msg.postbackActionLabel,data, "","")).WithImageOptions("#FFFFFF")
+		data := fmt.Sprintf(msg.postbackActionData, googleMapOutput.PlaceID)
+		cc := linebot.NewCarouselColumn(googleMapOutput.PhotoURL, googleMapOutput.Name,addr,linebot.NewURIAction("Open Google Map", googleMapOutput.URL),linebot.NewPostbackAction(msg.postbackActionLabel,data, "","")).WithImageOptions("#FFFFFF")
 		ccs = append(ccs,cc)
 	}
 

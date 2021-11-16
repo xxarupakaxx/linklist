@@ -13,11 +13,11 @@ import (
 
 type LinebotController struct {
 	favoriteInteractor usecase.IFavoriteUseCase
-	searchInteractor   usecase.SearchInteract
+	searchInteractor   usecase.SearchInteractor
 	bot                *linebot.Client
 }
 
-func NewLinebotController(favoriteInteractor usecase.IFavoriteUseCase, searchInteractor usecase.SearchInteract, bot *linebot.Client) *LinebotController {
+func NewLinebotController(favoriteInteractor usecase.IFavoriteUseCase, searchInteractor usecase.SearchInteractor, bot *linebot.Client) *LinebotController {
 	secret := os.Getenv("LINEBOT_SECRET")
 	token := os.Getenv("LINEBOT_TOKEN")
 
@@ -110,8 +110,8 @@ func createDataMap(q string) map[string]string {
 
 	dataArr := strings.Split(q,"&")
 	for _, s := range dataArr {
-		splitedData :=strings.Split(s,"=")
-		dataMap[splitedData[0]]=splitedData[1]
+		splitData :=strings.Split(s,"=")
+		dataMap[splitData[0]]= splitData[1]
 	}
 
 	return dataMap
