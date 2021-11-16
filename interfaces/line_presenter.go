@@ -60,7 +60,7 @@ func NewLinePresenter() *LinePresenter {
 	return &LinePresenter{bot: bot}
 }
 
-func (l *LinePresenter) addFavorite(output output.Add) {
+func (l *LinePresenter) AddFavorite(output output.Add) {
 	replyToken := output.ReplyToken
 
 	if !output.UserExists {
