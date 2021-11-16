@@ -4,7 +4,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/sirupsen/logrus"
-	usecase2 "github.com/xxarupakaxx/linklist/usecase"
+	"github.com/xxarupakaxx/linklist/usecase"
 	"github.com/xxarupakaxx/linklist/usecase/input"
 	"net/http"
 	"os"
@@ -12,12 +12,12 @@ import (
 )
 
 type LinebotController struct {
-	favoriteInteractor usecase2.IFavoriteUseCase
-	searchInteractor   usecase2.SearchInteract
+	favoriteInteractor usecase.IFavoriteUseCase
+	searchInteractor   usecase.SearchInteract
 	bot                *linebot.Client
 }
 
-func NewLinebotController(favoriteInteractor usecase2.IFavoriteUseCase, searchInteractor usecase2.SearchInteract, bot *linebot.Client) *LinebotController {
+func NewLinebotController(favoriteInteractor usecase.IFavoriteUseCase, searchInteractor usecase.SearchInteract, bot *linebot.Client) *LinebotController {
 	secret := os.Getenv("LINEBOT_SECRET")
 	token := os.Getenv("LINEBOT_TOKEN")
 

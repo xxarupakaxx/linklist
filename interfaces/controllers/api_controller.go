@@ -5,8 +5,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/line/line-bot-sdk-go/linebot"
 	"github.com/sirupsen/logrus"
-	usecase2 "github.com/xxarupakaxx/linklist/usecase"
-	input2 "github.com/xxarupakaxx/linklist/usecase/input"
+	"github.com/xxarupakaxx/linklist/usecase"
+	"github.com/xxarupakaxx/linklist/usecase/input"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -18,12 +18,12 @@ import (
 const msgSetPram = "パラメータを設定指定ください"
 
 type APIController struct {
-	favoriteInteractor usecase2.IFavoriteUseCase
-	searchInteractor   usecase2.ISearchUseCase
+	favoriteInteractor usecase.IFavoriteUseCase
+	searchInteractor   usecase.ISearchUseCase
 	bot                *linebot.Client
 }
 
-func NewAPIController(favoriteInteractor usecase2.IFavoriteUseCase, searchInteractor usecase2.ISearchUseCase) *APIController {
+func NewAPIController(favoriteInteractor usecase.IFavoriteUseCase, searchInteractor usecase.ISearchUseCase) *APIController {
 	return &APIController{favoriteInteractor: favoriteInteractor, searchInteractor: searchInteractor}
 }
 
@@ -48,7 +48,7 @@ func (controller *APIController) Search() echo.HandlerFunc {
 			}
 		}
 
-		input := input2.Search{
+		input := input.Search{
 			Q:    q,
 			Addr: addr,
 			Lat:  lat,
@@ -68,7 +68,7 @@ func (controller *APIController) GetFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := input2.Get{LineUserID: lineUserID}
+		input := input.Get{LineUserID: lineUserID}
 		output := controller.favoriteInteractor.Get(input)
 		return c.JSON(http.StatusOK, output)
 	}
@@ -84,7 +84,7 @@ func (controller *APIController) AddFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := input2.Add{
+		input := input.Add{
 			LineUserID: lineUseID,
 			PlaceID:    placeID,
 		}
@@ -105,7 +105,7 @@ func (controller *APIController) RemoveFavorites() echo.HandlerFunc {
 			return c.JSON(http.StatusBadRequest, msgSetPram)
 		}
 
-		input := input2.Remove{
+		input := input.Remove{
 			LineUserID: lineUserID,
 			PlaceID:    placeID,
 		}
